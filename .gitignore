@@ -1,0 +1,23 @@
+.env
+.vscode/
+uri.txt
+recordings/
+input.wav
+nao_input.wav
+naoinput.wav
+
+
+# python
+__pycache__/
+
+
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+Desktop.ini
