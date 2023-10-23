@@ -1,10 +1,5 @@
-from flask import Flask, request, jsonify, send_file, stream_with_context, Response
-import naoqi
+from flask import Flask, request, jsonify
 from naoqi import ALProxy, ALModule, ALBroker
-import time
-import os
-import subprocess
-import paramiko
 
 
 app = Flask(__name__)
