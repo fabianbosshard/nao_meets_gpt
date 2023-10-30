@@ -1,10 +1,14 @@
 .env
 .vscode/
 uri.txt
+
+# everything related to audio
 recordings/
 input.wav
 nao_input.wav
 naoinput.wav
+input_noise_reduced.wav
+input_spectral_subtraction.wav
 
 
 # python

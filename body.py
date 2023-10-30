@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from naoqi import ALProxy, ALModule, ALBroker
+import time
 
 
 app = Flask(__name__)
@@ -11,6 +12,9 @@ broker = "myBroker"
 
 tts = ALProxy("ALTextToSpeech", nao_IP, port)
 audio_recorder = ALProxy("ALAudioRecorder", nao_IP, port)
+
+# define volume of the robot
+tts.setVolume(0.5)
 
 @app.route('/talk', methods=['POST'])
 def talk():
@@ -39,11 +43,16 @@ class AudioCaptureModule(ALModule):
     def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timeStamp, inputBuffer):
         if self.is_listening:
             self.buffers.append(inputBuffer)
+            print("length and type of server buffer", len(self.buffers), type(self.buffers))
+            print("length and type inputBuffer:", len(inputBuffer), type(inputBuffer))
+            print("first element of inputBuffer:", inputBuffer[0])
 
     def get_audio_chunk(self):
         if self.buffers:
-            return self.buffers.pop(0)
-        return None
+            return self.buffers.pop(0) # Return the oldest audio chunk
+        else:
+            print("no audio data available")
+            return None
 
 # Set up broker connection
 try:
@@ -71,11 +80,14 @@ def stop_listening():
 def get_audio_chunk():
     print("Received a request to get an audio chunk")
     audio_data = AudioCapture.get_audio_chunk()
-    if audio_data:
+    if audio_data is not None:
         return audio_data  # Send the audio data as a response
-    while not audio_data: # Wait until audio data is available
-        audio_data = AudioCapture.get_audio_chunk()
-    return audio_data
+    else:
+        print("Server buffer is empty, waiting for audio data...")
+        while audio_data is None: # Wait until audio data is available
+            audio_data = AudioCapture.get_audio_chunk()
+            time.sleep(0.025)
+        return audio_data
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5004)
