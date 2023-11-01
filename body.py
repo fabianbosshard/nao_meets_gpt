@@ -25,6 +25,10 @@ def talk():
 
 # NAOqi module for capturing audio
 class AudioCaptureModule(ALModule):
+    """ 
+    This is a custom module built on top of NAOqi framework for managing audio capture from NAO's microphones.
+    It extends ALModule class from the NAOqi framework and defines methods to to start and stop audio capture, process audio data, and retrieve audio chunks. 
+    """
     def __init__(self, name):
         ALModule.__init__(self, name)
         self.audio_device = ALProxy("ALAudioDevice", nao_IP, port)
@@ -32,7 +36,7 @@ class AudioCaptureModule(ALModule):
         self.buffers = []
 
     def start_listening(self):
-        self.audio_device.setClientPreferences(self.getName(), 16000, 3, 0)
+        self.audio_device.setClientPreferences(self.getName(), 16000, 3, 0) # sample rate of 16000 Hz, using 3 (all) available audio channels, and a deinterleaving flag of 0
         self.audio_device.subscribe(self.getName())
         self.is_listening = True
 
@@ -40,12 +44,13 @@ class AudioCaptureModule(ALModule):
         self.audio_device.unsubscribe(self.getName())
         self.is_listening = False
 
-    def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timeStamp, inputBuffer):
+    def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timeStamp, inputBuffer): # callback method that is triggered whenever new audio data is available
+        print("received audio data from NAO with the following parameters: nbOfChannels = " + str(nbOfChannels) + ", nbOfSamplesByChannel = " + str(nbOfSamplesByChannel) + ", timeStamp = " + str(timeStamp))
+        print("length and type of server buffer", len(self.buffers), type(self.buffers))
+        print("length and type inputBuffer:", len(inputBuffer), type(inputBuffer))
+        print("first element of inputBuffer:", inputBuffer[0])
         if self.is_listening:
             self.buffers.append(inputBuffer)
-            print("length and type of server buffer", len(self.buffers), type(self.buffers))
-            print("length and type inputBuffer:", len(inputBuffer), type(inputBuffer))
-            print("first element of inputBuffer:", inputBuffer[0])
 
     def get_audio_chunk(self):
         if self.buffers:
@@ -54,11 +59,11 @@ class AudioCaptureModule(ALModule):
             print("no audio data available")
             return None
 
-# Set up broker connection
+# broker connection: essential for communicating between the module and the NAOqi runtime
 try:
     pythonBroker = ALBroker("pythonBroker", "0.0.0.0", 0, nao_IP, port)
     global AudioCapture
-    AudioCapture = AudioCaptureModule("AudioCapture")
+    AudioCapture = AudioCaptureModule("AudioCapture") # create an instance of the AudioCaptureModule class
 except RuntimeError:
     print("Error initializing broker!")
     exit(1)
