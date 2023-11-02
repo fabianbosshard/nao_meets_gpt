@@ -8,7 +8,3 @@ COPY . .
 
 # Install necessary packages. If the naoqi library is included in the SDK image, you might not need to install it again.
 RUN pip install flask paramiko numpy requests
-
-# Specify the command to run on container start
-CMD ["/usr/local/bin/python", "/usr/src/app/body.py"]
-

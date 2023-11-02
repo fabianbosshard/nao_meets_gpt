@@ -7,11 +7,10 @@ app = Flask(__name__)
 
 nao = True
 nao_IP = 'nao.local'
-port = 9559
+nao_port = 9559
 broker = "myBroker"
 
-tts = ALProxy("ALTextToSpeech", nao_IP, port)
-audio_recorder = ALProxy("ALAudioRecorder", nao_IP, port)
+tts = ALProxy("ALTextToSpeech", nao_IP, nao_port)
 
 # define volume of the robot
 tts.setVolume(0.5)
@@ -31,13 +30,16 @@ class AudioCaptureModule(ALModule):
     """
     def __init__(self, name):
         ALModule.__init__(self, name)
-        self.audio_device = ALProxy("ALAudioDevice", nao_IP, port)
+        self.audio_device = ALProxy("ALAudioDevice", nao_IP, nao_port)
         self.is_listening = False
         self.buffers = []
 
     def start_listening(self):
+        print("checkpoint 1")
         self.audio_device.setClientPreferences(self.getName(), 16000, 3, 0) # sample rate of 16000 Hz, using 3 (all) available audio channels, and a deinterleaving flag of 0
+        print("checkpoint 2")
         self.audio_device.subscribe(self.getName())
+        print("checkpoint 3")
         self.is_listening = True
 
     def stop_listening(self):
@@ -61,9 +63,10 @@ class AudioCaptureModule(ALModule):
 
 # broker connection: essential for communicating between the module and the NAOqi runtime
 try:
-    pythonBroker = ALBroker("pythonBroker", "0.0.0.0", 0, nao_IP, port)
+    pythonBroker = ALBroker("pythonBroker", "0.0.0.0", 0, nao_IP, nao_port)
     global AudioCapture
     AudioCapture = AudioCaptureModule("AudioCapture") # create an instance of the AudioCaptureModule class
+    print("AudioCapture module initialized")
 except RuntimeError:
     print("Error initializing broker!")
     exit(1)
@@ -73,6 +76,7 @@ except RuntimeError:
 def start_listening():
     print("Received a request to start listening")
     AudioCapture.start_listening()
+    print("Started listening")
     return jsonify(success=True)
 
 @app.route('/stop_listening', methods=['POST'])
