@@ -24,18 +24,6 @@ def talk():
     animatedSpeech.say(str(message))
     return jsonify(success=True)
 
-@app.route('/change_posture', methods=['POST'])
-def change_posture():
-    print("Received a request to change posture")
-    posture = request.json.get('posture')
-    posture = str(posture)
-    if posture in ["Stand", "StandInit", "StandZero", "Crouch", "Sit", "SitRelax", "LyingBelly", "LyingBack"]:
-        # Call the goToPosture method of the ALRobotPosture service
-        success = posture_service.goToPosture(posture, 1.0)
-        return jsonify(success=success)
-    else:
-        return jsonify(success=False, message="Invalid posture requested.")
-
 
 # NAOqi module for capturing audio
 class AudioCaptureModule(ALModule):
