@@ -11,6 +11,8 @@ nao_port = 9559
 broker = "myBroker"
 
 tts = ALProxy("ALTextToSpeech", nao_IP, nao_port)
+animatedSpeech = ALProxy("ALAnimatedSpeech", nao_IP, nao_port)
+posture_service = ALProxy("ALRobotPosture", nao_IP, nao_port)
 
 # define volume of the robot
 tts.setVolume(0.5)
@@ -19,8 +21,21 @@ tts.setVolume(0.5)
 def talk():
     print("Received a request to talk")
     message = request.json.get('message')
-    tts.say(str(message))
+    animatedSpeech.say(str(message))
     return jsonify(success=True)
+
+@app.route('/change_posture', methods=['POST'])
+def change_posture():
+    print("Received a request to change posture")
+    posture = request.json.get('posture')
+    posture = str(posture)
+    if posture in ["Stand", "StandInit", "StandZero", "Crouch", "Sit", "SitRelax", "LyingBelly", "LyingBack"]:
+        # Call the goToPosture method of the ALRobotPosture service
+        success = posture_service.goToPosture(posture, 1.0)
+        return jsonify(success=success)
+    else:
+        return jsonify(success=False, message="Invalid posture requested.")
+
 
 # NAOqi module for capturing audio
 class AudioCaptureModule(ALModule):
@@ -35,11 +50,8 @@ class AudioCaptureModule(ALModule):
         self.buffers = []
 
     def start_listening(self):
-        print("checkpoint 1")
         self.audio_device.setClientPreferences(self.getName(), 16000, 3, 0) # sample rate of 16000 Hz, using 3 (all) available audio channels, and a deinterleaving flag of 0
-        print("checkpoint 2")
         self.audio_device.subscribe(self.getName())
-        print("checkpoint 3")
         self.is_listening = True
 
     def stop_listening(self):
@@ -47,10 +59,10 @@ class AudioCaptureModule(ALModule):
         self.is_listening = False
 
     def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timeStamp, inputBuffer): # callback method that is triggered whenever new audio data is available
-        print("received audio data from NAO with the following parameters: nbOfChannels = " + str(nbOfChannels) + ", nbOfSamplesByChannel = " + str(nbOfSamplesByChannel) + ", timeStamp = " + str(timeStamp))
-        print("length and type of server buffer", len(self.buffers), type(self.buffers))
-        print("length and type inputBuffer:", len(inputBuffer), type(inputBuffer))
-        print("first element of inputBuffer:", inputBuffer[0])
+        # print("received audio data from NAO with the following parameters: nbOfChannels = " + str(nbOfChannels) + ", nbOfSamplesByChannel = " + str(nbOfSamplesByChannel) + ", timeStamp = " + str(timeStamp))
+        # print("length and type of server buffer", len(self.buffers), type(self.buffers))
+        # print("length and type inputBuffer:", len(inputBuffer), type(inputBuffer))
+        # print("first element of inputBuffer:", inputBuffer[0])
         if self.is_listening:
             self.buffers.append(inputBuffer)
 
@@ -76,7 +88,6 @@ except RuntimeError:
 def start_listening():
     print("Received a request to start listening")
     AudioCapture.start_listening()
-    print("Started listening")
     return jsonify(success=True)
 
 @app.route('/stop_listening', methods=['POST'])
@@ -87,7 +98,7 @@ def stop_listening():
 
 @app.route('/get_audio_chunk', methods=['GET'])
 def get_audio_chunk():
-    print("Received a request to get an audio chunk")
+    # print("Received a request to get an audio chunk")
     audio_data = AudioCapture.get_audio_chunk()
     if audio_data is not None:
         return audio_data  # Send the audio data as a response
