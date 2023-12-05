@@ -38,7 +38,7 @@ class AudioCaptureModule(ALModule):
         self.buffers = []
 
     def start_listening(self):
-        self.audio_device.setClientPreferences(self.getName(), 16000, 3, 0) # sample rate of 16000 Hz, using 3 (all) available audio channels, and a deinterleaving flag of 0
+        self.audio_device.setClientPreferences(self.getName(), 16000, 3, 0) # sample rate of 16000 Hz, channelparam 3 (front channel), and a deinterleaving flag of 0 (only relevant for channelparam 0 (all channels))
         self.audio_device.subscribe(self.getName())
         self.is_listening = True
 
@@ -47,10 +47,11 @@ class AudioCaptureModule(ALModule):
         self.is_listening = False
 
     def processRemote(self, nbOfChannels, nbOfSamplesByChannel, timeStamp, inputBuffer): # callback method that is triggered whenever new audio data is available
-        # print("received audio data from NAO with the following parameters: nbOfChannels = " + str(nbOfChannels) + ", nbOfSamplesByChannel = " + str(nbOfSamplesByChannel) + ", timeStamp = " + str(timeStamp))
-        # print("length and type of server buffer", len(self.buffers), type(self.buffers))
+        print("received audio data from NAO with the following parameters: nbOfChannels = " + str(nbOfChannels) + ", nbOfSamplesByChannel = " + str(nbOfSamplesByChannel) + ", timeStamp = " + str(timeStamp[0]) + " sec " + str(timeStamp[1]) + " musec" + ", length of inputBuffer = " + str(len(inputBuffer)))
+        print("length and type of server buffer", len(self.buffers), type(self.buffers))
         # print("length and type inputBuffer:", len(inputBuffer), type(inputBuffer))
-        # print("first element of inputBuffer:", inputBuffer[0])
+        print("first element of inputBuffer:", inputBuffer[0], "type:", type(inputBuffer[0]))
+        print("current lentgh of server buffer:", len(self.buffers))
         if self.is_listening:
             self.buffers.append(inputBuffer)
 
@@ -60,6 +61,8 @@ class AudioCaptureModule(ALModule):
         else:
             print("no audio data available")
             return None
+        
+    
 
 # broker connection: essential for communicating between the module and the NAOqi runtime
 try:
@@ -74,19 +77,19 @@ except RuntimeError:
 
 @app.route('/start_listening', methods=['POST'])
 def start_listening():
-    print("Received a request to start listening")
+    print("Received a request to start listening, current length of server buffer:", len(AudioCapture.buffers))
     AudioCapture.start_listening()
     return jsonify(success=True)
 
 @app.route('/stop_listening', methods=['POST'])
 def stop_listening():
-    print("Received a request to stop listening")
+    print("Received a request to stop listening, current length of server buffer:", len(AudioCapture.buffers))
     AudioCapture.stop_listening()
     return jsonify(success=True)
 
 @app.route('/get_audio_chunk', methods=['GET'])
 def get_audio_chunk():
-    # print("Received a request to get an audio chunk")
+    print("Received a request to get an audio chunk, current length of server buffer:", len(AudioCapture.buffers))
     audio_data = AudioCapture.get_audio_chunk()
     if audio_data is not None:
         return audio_data  # Send the audio data as a response
@@ -96,6 +99,11 @@ def get_audio_chunk():
             audio_data = AudioCapture.get_audio_chunk()
             time.sleep(0.025)
         return audio_data
+    
+@app.route('/print_server_buffer_length', methods=['GET'])
+def print_server_buffer_length():
+    print("Received a request to print the length of the server buffer, current length of server buffer:", len(AudioCapture.buffers))
+    return jsonify(length=len(AudioCapture.buffers))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5004)
