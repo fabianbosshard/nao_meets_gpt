@@ -1,23 +1,14 @@
-# NAO meets GPT
+# NAO Meets GPT
 
 ## Overview
-This project involves the integration of a NAO robot with an advanced language model (GPT) to enable sophisticated human-robot interactions. The system is divided into two main components: a Python server (`body.py`) that interacts directly with the NAO robot, and a Python client (`brain.py`) that handles speech recognition, communication with GPT, and orchestrates the overall interaction.
+![Alt text](image.png)
+This project involves the integration of a NAO robot with an advanced language model (GPT) to enable sophisticated human-robot interactions. The system is divided into two main components: a Python server (`body.py`) that interacts directly with the NAO robot, and a Python client (`brain.py`) that handles speech-to-text processing, communication with GPT, and orchestrates the overall interaction by making requests to the server.
 
-### `body.py` - Server Component
-This component is responsible for audio capture, text-to-speech functionality, and managing audio data. It uses the `NAOqi` framework for robot operations.
+### `body.py`: Server Component
+This component is responsible for interacting with NAO, i.e., text-to-speech,audio capture, and sending audio chunks to `brain.py` for speech-to-text processing. It uses the `NAOqi` framework for robot operations.
 
-Key Features:
-- Audio capture from NAO's microphones
-- Text-to-speech functionality for NAO
-- Communication with the client component via Flask API
-
-### `brain.py` - Client Component
-This component runs separately and is responsible for processing and responding to human speech using GPT. 
-
-Key Features:
-- Speech recognition using Google's API
-- Communication with OpenAI's GPT for generating responses
-- Sending recognized speech to GPT and relaying responses back to the server
+### `brain.py`: Client Component
+This component runs separately and is responsible for speech recognition from the audio chunks as well as processing the recognized text using GPT. It sends the generated response from GPT to the server component for text-to-speech.
 
 ## Getting Started
 
@@ -29,15 +20,15 @@ Key Features:
 - OpenAI API key for GPT access
 
 ### Setup
-1. **Install NAO Python SDK**: Follow the instructions [here](https://support.aldebaran.com/support/solutions/articles/80001017327-python-sdk-installation-guide) to install the NAO Python SDK.
+1. **Install the NAO Python SDK**: Follow the instructions [here](https://support.aldebaran.com/support/solutions/articles/80001017327-python-sdk-installation-guide) to install the NAO Python SDK.
 2. **Python Environments**: Create two separate Python environments, one for the server component and one for the client component. The server component requires Python 2.7, while the client component requires Python 3.x.
 3. **Install Dependencies**: Ensure all required Python libraries are installed in your environments.
-4. **Configure Environment Variables**: Create a `.env` and set your OpenAI API key in the `.env` file.
-5. **Turn on NAO**: Turn on the NAO robot and connect it to a router with an Ethernet cable.
-6. **Connect to the router**: Connect your machine via Ethernet to the same router as the NAO robot.
-7. **Run the Server**: Execute `body.py` in your Python 2.7 environment to start the Flask server. The server will manage audio input/output with the NAO robot.
-8. **Run the Client**: Execute `brain.py` in your Python 3.x environment. This script will start listening for speech, process it, and interact with GPT for generating responses.
-9. **Talk to the NAO robot**: Speak to the NAO robot. The system will capture your speech, transcribe it, and send it to GPT. The generated response from GPT will be spoken by the NAO robot.
+4. **Configure Environment Variables**: Create a `.env` file and set your OpenAI API key in this file.
+5. **Turn on the NAO Robot**: Turn on the NAO robot and connect it to a router with an Ethernet cable.
+6. **Connect to the Router**: Connect your machine to the router via Ethernet.
+7. **Run the Server**: Run `body.py` in your Python 2.7 environment to start the Flask server. The server will manage audio input/output with the NAO robot.
+8. **Run the Client**: Run `brain.py` in your Python 3.x environment. This script will start listening for speech, process it, and interact with GPT for generating responses.
+9. **Talk to the NAO Robot**: Speak to the NAO robot. The system will capture your speech, transcribe it, and send it to GPT. The generated response from GPT will be spoken by the NAO robot.
 
 ## Conclusion
-This project demonstrates an innovative way to enhance human-robot interaction using state-of-the-art AI technology. By leveraging the capabilities of GPT, the NAO robot can engage in more natural and sophisticated conversations.
+This project demonstrates an innovative way to enhance human-robot interaction using a state-of-the-art AI technology. By leveraging the capabilities of GPT, the NAO robot can engage in more natural and sophisticated conversations.

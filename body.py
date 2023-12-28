@@ -10,7 +10,7 @@ nao_port = 9559
 sleep_time = 0.01
 
 tts = ALProxy("ALTextToSpeech", nao_IP, nao_port)
-tts.setVolume(0.5) # define volume of the robot
+tts.setVolume(0.95) # define volume of the robot
 animatedSpeech = ALProxy("ALAnimatedSpeech", nao_IP, nao_port)
  
 
