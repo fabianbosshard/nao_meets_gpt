@@ -30,5 +30,3 @@ This component runs separately and is responsible for speech recognition from th
 8. **Run the Client**: Run `brain.py` in your Python 3.x environment. This script will start listening for speech, process it, and interact with GPT for generating responses.
 9. **Talk to the NAO Robot**: Speak to the NAO robot. The system will capture your speech, transcribe it, and send it to GPT. The generated response from GPT will be spoken by the NAO robot.
 
-## Conclusion
-This project demonstrates an innovative way to enhance human-robot interaction using a state-of-the-art AI technology. By leveraging the capabilities of GPT, the NAO robot can engage in more natural and sophisticated conversations.
