@@ -21,22 +21,22 @@ This component runs separately and is responsible for speech recognition from th
 
 ### Setup
 1. **Install the NAO Python SDK**: Follow the instructions [here](https://support.aldebaran.com/support/solutions/articles/80001017327-python-sdk-installation-guide) to install the NAO Python SDK.
-2. **Python Environments**: Create two separate Python environments, one for the server component and one for the client component. The server component requires Python 2.7, while the client component requires Python 3.x. The specific versions of Python libraries used for each component are listed in the `requirements.txt` file.
+2. **Python Environments**: Create two separate Python environments, one for the server component and one for the client component. The server component requires Python 2.7, while the client component requires Python 3.x. The specific Python versions and library versions used for each component are listed [here](requirements.txt).
 3. **Install Dependencies**: Ensure all required Python libraries are installed in your environments.
 4. **Configure Environment Variables**: Create a `.env` file and set your Azure API key and endpoint in this file. The `.env` file should look like this:
 ```
 AZURE_OPENAI_KEY=e*******************************
 AZURE_OPENAI_ENDPOINT=https://naomeetsgpt.openai.azure.com/
 ```
-5. **Turn on the NAO Robot**: Turn on the NAO robot and connect it to a router with an Ethernet cable.
-6. **Connect to the Router**: Connect your machine to the router via Ethernet.
-7. **Run the Server**: Run `body.py` in your Python 2.7 environment to start the Flask server. The server will manage audio input/output with the NAO robot.
-8. **Run the Client**: Run `brain.py` in your Python 3.x environment. This script will start listening for speech, process it, and interact with GPT for generating responses.
-9. **Talk to the NAO Robot**: Speak to the NAO robot. The system will capture your speech, transcribe it, and send it to GPT. The generated response from GPT will be spoken by the NAO robot.
-
+1. **Turn on the NAO Robot**: Turn on the NAO robot and connect it to a router with an Ethernet cable.
+2. **Connect to the Router**: Connect your machine to the router via Ethernet.
+3. **Run the Server**: Run `body.py` in your Python 2.7 environment to start the Flask server. The server will manage audio input/output with the NAO robot.
+4. **Run the Client**: Run `brain.py` in your Python 3.x environment. This script will start listening for speech, process it, and interact with GPT for generating responses.
+5. **Talk to the NAO Robot**: Speak to the NAO robot. The system will capture your speech, transcribe it, and send it to GPT. The generated response from GPT will be spoken by the NAO robot.
 
 ### More details on the venv27 environment
 There are probably many possible ways to do this, but here is one way that worked for me (on a 2019 MacBook Pro running macOS Sonoma 14.1.1):
+
 Use the following command to create a Python 2.7 virtual environment:
 ```bash
 /usr/local/bin/python2.7 -m virtualenv /path/to/your/venv27
@@ -56,3 +56,19 @@ When you want to run the server component, use the `python27` command instead of
 ```bash
 python27 body.py
 ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Citation
+If you use this project in your research or work, please consider citing it using the following BibTeX entry:
+```
+@misc{naomeetsgpt2023,
+  author = {Bosshard, Fabian and Meseret, Milion},
+  title = {{NAO Meets GPT}},
+  howpublished = {Project Thesis, Zurich University of Applied Sciences},
+  year = {2023},
+  url = {https://github.com/fabianbosshard/nao_meets_gpt/blob/main/project_thesis_corrected.pdf}
+}
+```
+
