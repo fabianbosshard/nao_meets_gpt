@@ -1,0 +1,12 @@
+# venv27
+Python==2.7.18
+Flask==1.1.4
+
+# venv3
+Python==3.10.12
+Requests==2.31.0
+NumPy==1.26.3
+OpenAI==0.27.4
+SpeechRecognition==3.10.0
+dotenv==1.0.0
+tiktoken==0.5.1
