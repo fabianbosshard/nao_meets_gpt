@@ -35,7 +35,7 @@ AZURE_OPENAI_ENDPOINT=https://naomeetsgpt.openai.azure.com/
 5. **Talk to the NAO Robot**: Speak to the NAO robot. The system will capture your speech, transcribe it, and send it to GPT. The generated response from GPT will be spoken by the NAO robot.
 
 ### More details on the venv27 environment
-There are probably many possible ways to do this, but here is one way that worked for me (on a 2019 MacBook Pro running macOS Sonoma 14.1.1):
+There are probably many possible ways to do this, but here is one way that worked for us (on a 2019 MacBook Pro running macOS Sonoma 14.1.1):
 
 Use the following command to create a Python 2.7 virtual environment:
 ```bash
