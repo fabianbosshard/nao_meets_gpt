@@ -26,7 +26,7 @@ This component runs separately and is responsible for speech recognition from th
 4. **Configure Environment Variables**: Create a `.env` file and set your Azure API key and endpoint in this file. The `.env` file should look like this:
 ```
 AZURE_OPENAI_KEY=e*******************************
-AZURE_OPENAI_ENDPOINT=https://naomeetsgpt.openai.azure.com/
+AZURE_OPENAI_ENDPOINT=https://nameofyourendpoint.openai.azure.com/
 ```
 1. **Turn on the NAO Robot**: Turn on the NAO robot and connect it to a router with an Ethernet cable.
 2. **Connect to the Router**: Connect your machine to the router via Ethernet.
